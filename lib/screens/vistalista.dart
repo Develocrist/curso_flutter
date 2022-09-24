@@ -14,20 +14,10 @@ class VistaListaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Lista Calculadora'),
+          title: const Text('Calculadora con Faltante'),
         ),
-        body: ListView(
-          children: [
-            ...options
-                .map((calculadoras) => ListTile(
-                      title: Text(calculadoras),
-                      leading: const Icon(Icons.calculate_outlined),
-                      trailing: const Icon(Icons.arrow_circle_right_outlined),
-                      onTap: () {},
-                    ))
-                .toList(),
-            const Divider(),
-          ],
-        ));
+        body: ListView(children: <Widget>[
+          const Text('Aqui deberia ir una calculadora con faltante'),
+        ]));
   }
 }

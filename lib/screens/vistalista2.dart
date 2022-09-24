@@ -1,3 +1,5 @@
+import 'package:eoq_calculator1/models/menu_option.dart';
+import 'package:eoq_calculator1/router/app_routes.dart';
 import 'package:eoq_calculator1/screens/alert_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -12,23 +14,20 @@ class VistaLista2Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuOptions = AppRoutes.menuOptions;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista Calculadora duplicado'),
+        title: const Text('Lista Calculadora'),
         elevation: 0,
         backgroundColor: Colors.indigo,
       ),
       body: ListView.separated(
-        itemCount: options.length,
-        itemBuilder: (context, index) => ListTile(
-          title: Text(options[index]),
-          leading: const Icon(
-            Icons.calculate_outlined,
-            color: Colors.indigo,
-          ),
-          trailing: const Icon(Icons.arrow_circle_right_outlined),
+        itemBuilder: (context, i) => ListTile(
+          title: Text(menuOptions[i].name),
+          leading: Icon(menuOptions[i].icon),
           onTap: () {
-            Navigator.pushNamed(context, 'card');
+            Navigator.pushNamed(context, menuOptions[i].route);
 
             //codigo comentado para complementar el de main.dart para la navegacion
             // final route = MaterialPageRoute(
@@ -38,6 +37,7 @@ class VistaLista2Screen extends StatelessWidget {
           },
         ),
         separatorBuilder: (_, __) => const Divider(),
+        itemCount: menuOptions.length,
       ),
     );
   }

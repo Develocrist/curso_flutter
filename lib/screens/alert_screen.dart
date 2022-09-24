@@ -5,8 +5,11 @@ class AlertScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Calculadora básica EOQ'),
+      ),
+      body: const Center(
         child: Text('Pantalla donde va la calculadora basica'),
       ),
     );
