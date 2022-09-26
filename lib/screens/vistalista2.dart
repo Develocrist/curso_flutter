@@ -1,7 +1,6 @@
-import 'package:eoq_calculator1/models/menu_option.dart';
-import 'package:eoq_calculator1/router/app_routes.dart';
-import 'package:eoq_calculator1/screens/alert_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'package:eoq_calculator1/router/app_routes.dart';
 
 class VistaLista2Screen extends StatelessWidget {
   final options = const [

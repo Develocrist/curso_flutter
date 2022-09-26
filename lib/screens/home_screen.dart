@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:eoq_calculator1/screens/screens.dart';
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 

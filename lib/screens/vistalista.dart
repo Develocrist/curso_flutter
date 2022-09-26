@@ -16,8 +16,8 @@ class VistaListaScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Calculadora con Faltante'),
         ),
-        body: ListView(children: <Widget>[
-          const Text('Aqui deberia ir una calculadora con faltante'),
+        body: ListView(children: const <Widget>[
+          Text('Aqui deberia ir una calculadora con faltante'),
         ]));
   }
 }

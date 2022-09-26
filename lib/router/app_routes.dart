@@ -7,7 +7,6 @@ class AppRoutes {
   static const initialRoute = 'listview2';
 
   static final menuOptions = <MenuOptions>[
-    //TODO: borrar home
     MenuOptions(
         route: 'alert',
         icon: Icons.calculate_outlined,
