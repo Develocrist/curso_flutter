@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class AlertScreen extends StatelessWidget {
@@ -6,6 +8,7 @@ class AlertScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Calculadora",
       home: MyCalculator(),
     );
@@ -25,23 +28,31 @@ class MyCalculator extends StatefulWidget {
 }
 
 class Calculadora extends State<MyCalculator> {
-  final controller_peso = TextEditingController();
-  final controller_talla = TextEditingController();
+  final controllerDemanda = TextEditingController();
+  final controllerOrden = TextEditingController();
+  final controllerCostoUnitario = TextEditingController();
+  final controllerMantencion = TextEditingController();
   final my_form_key = GlobalKey<FormState>();
 
   String mostrarImc = "";
+  String mostrarNumOrdenes = "";
 
   //formula para realizar la operacion aritmetica
   void OperacionMatematica() {
     if (my_form_key.currentState!.validate()) {
-      double numero1 = double.parse(controller_peso.text);
-      double numero2 = double.parse(controller_talla.text);
+      double demanda = double.parse(controllerDemanda.text);
+      double orden = double.parse(controllerOrden.text);
+      double costoUnitario = double.parse(controllerCostoUnitario.text);
+      double costoMantencion = double.parse(controllerMantencion.text);
 
-      double result = numero1 / numero2;
-      String r = result.toStringAsFixed(1);
+      double cantidadOptima = sqrt((2 * demanda * orden) / costoMantencion);
+      String r = cantidadOptima.toStringAsFixed(0);
+      double numOrdenes = demanda / cantidadOptima;
+      String ordenes = numOrdenes.toStringAsFixed(0);
 
       setState(() {
-        mostrarImc = 'La division es: $r';
+        mostrarImc = 'La cantidad optima de pedido es de $r unidades';
+        mostrarNumOrdenes = 'El numero de ordenes esperado es de $ordenes ';
       });
     }
   }
@@ -55,7 +66,7 @@ class Calculadora extends State<MyCalculator> {
       appBar: AppBar(
         title: const Text('Calculadora EOQ'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {},
         ),
       ),
@@ -65,37 +76,37 @@ class Calculadora extends State<MyCalculator> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              Container(
-                width: 500,
-                height: 130,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 118, 132, 202),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(80),
-                      bottomRight: Radius.circular(80),
-                    )),
-                // child: Stack(
-                //   children: <Widget>[
-                //     Align(
-                //       alignment: Alignment.center,
-                //       child: new Image(
-                //         width: 200.0,
-                //         height: 150.0,
-                //         image: new AssetImage('assets/images/iconagii2.png'),
-                //       ),
-                //     )
-                //   ],
-                // ),
-              ),
+              // Container(
+              //   width: 500,
+              //   height: 130,
+              //   decoration: const BoxDecoration(
+              //       color: Color.fromARGB(255, 118, 132, 202),
+              //       borderRadius: BorderRadius.only(
+              //         bottomLeft: Radius.circular(80),
+              //         bottomRight: Radius.circular(80),
+              //       )),
+              //   // child: Stack(
+              //   //   children: <Widget>[
+              //   //     Align(
+              //   //       alignment: Alignment.center,
+              //   //       child: new Image(
+              //   //         width: 200.0,
+              //   //         height: 150.0,
+              //   //         image: new AssetImage('assets/images/iconagii2.png'),
+              //   //       ),
+              //   //     )
+              //   //   ],
+              //   // ),
+              // ),
 
               //agregamos otro container
               Container(
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(children: [
                   Container(
-                    width: 160,
-                    height: 50,
-                    padding: EdgeInsets.all(7),
+                    width: 220,
+                    height: 80,
+                    padding: const EdgeInsets.all(7),
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
@@ -103,12 +114,12 @@ class Calculadora extends State<MyCalculator> {
                           BoxShadow(color: Colors.black, blurRadius: 5)
                         ]),
                     child: TextFormField(
-                      controller: controller_peso,
+                      controller: controllerDemanda,
                       validator: (value) {
-                        if (value!.isEmpty) return "Digita el peso";
+                        if (value!.isEmpty) return "Ingresa la demanda";
                       },
                       decoration: const InputDecoration(
-                          hintText: "Peso Kg",
+                          hintText: "Ingresar demanda",
                           icon: Icon(Icons.account_balance_wallet_outlined,
                               color: Colors.purpleAccent)),
                       keyboardType: TextInputType.number,
@@ -116,14 +127,14 @@ class Calculadora extends State<MyCalculator> {
                   ),
                 ]),
               ),
-              Divider(),
+              const Divider(),
               Container(
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(children: [
                   Container(
-                    width: 160,
-                    height: 50,
-                    padding: EdgeInsets.all(7),
+                    width: 220,
+                    height: 80,
+                    padding: const EdgeInsets.all(7),
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
@@ -131,12 +142,70 @@ class Calculadora extends State<MyCalculator> {
                           BoxShadow(color: Colors.black, blurRadius: 5)
                         ]),
                     child: TextFormField(
-                      controller: controller_talla,
+                      controller: controllerOrden,
                       validator: (value) {
-                        if (value!.isEmpty) return "Digita la estatura";
+                        if (value!.isEmpty) return "Ingresa el costo de orden";
                       },
                       decoration: const InputDecoration(
-                          hintText: "Altura cm",
+                          hintText: "Ingresar costo orden",
+                          icon: Icon(Icons.account_balance_wallet_outlined,
+                              color: Colors.purpleAccent)),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ]),
+              ),
+              const Divider(),
+              Container(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(children: [
+                  Container(
+                    width: 220,
+                    height: 80,
+                    padding: const EdgeInsets.all(7),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black, blurRadius: 5)
+                        ]),
+                    child: TextFormField(
+                      controller: controllerCostoUnitario,
+                      validator: (value) {
+                        if (value!.isEmpty) return "Ingresa el costo unitario";
+                      },
+                      decoration: const InputDecoration(
+                          hintText: "Costo unitario",
+                          icon: Icon(Icons.account_balance_wallet_outlined,
+                              color: Colors.purpleAccent)),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ]),
+              ),
+              const Divider(),
+              Container(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(children: [
+                  Container(
+                    width: 220,
+                    height: 80,
+                    padding: const EdgeInsets.all(7),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black, blurRadius: 5)
+                        ]),
+                    child: TextFormField(
+                      controller: controllerMantencion,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Ingresar costo de mantencion";
+                        }
+                      },
+                      decoration: const InputDecoration(
+                          hintText: "Costo Mantención",
                           icon: Icon(Icons.account_balance_wallet_outlined,
                               color: Colors.purpleAccent)),
                       keyboardType: TextInputType.number,
@@ -145,7 +214,7 @@ class Calculadora extends State<MyCalculator> {
                 ]),
               ),
               const Divider(
-                height: 30.0,
+                height: 20.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +254,7 @@ class Calculadora extends State<MyCalculator> {
                 height: 40.0,
               ),
               Container(
-                height: 50.0,
+                height: 150,
                 width: 300,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -194,11 +263,31 @@ class Calculadora extends State<MyCalculator> {
                 ),
                 //creamos el resultado del textformfield
                 child: Center(
-                    child: Text(
-                  mostrarImc,
-                  style: const TextStyle(fontSize: 20.0),
-                )),
-              )
+                  child: Text(
+                    mostrarImc,
+                    style: const TextStyle(fontSize: 20.0),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              Divider(),
+              Container(
+                height: 150,
+                width: 300,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Color(0xFFFE2E64), Color(0xFFfF7818)]),
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                ),
+                //creamos el resultado del textformfield
+                child: Center(
+                  child: Text(
+                    mostrarNumOrdenes,
+                    style: const TextStyle(fontSize: 20.0),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
