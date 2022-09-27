@@ -32,10 +32,17 @@ class Calculadora extends State<MyCalculator> {
   final controllerOrden = TextEditingController();
   final controllerCostoUnitario = TextEditingController();
   final controllerMantencion = TextEditingController();
+  final controllerDias = TextEditingController();
   final my_form_key = GlobalKey<FormState>();
 
-  String mostrarImc = "";
+  String mostrarCantidadOptima = "";
   String mostrarNumOrdenes = "";
+  String tiempoReorden = "";
+  String campoPuntoReorden = "";
+
+  String costoOrden = "";
+  String costoMantencion = "";
+  String costoTotal = "";
 
   //formula para realizar la operacion aritmetica
   void OperacionMatematica() {
@@ -43,28 +50,56 @@ class Calculadora extends State<MyCalculator> {
     double orden = double.parse(controllerOrden.text);
     double costoUnitario = double.parse(controllerCostoUnitario.text);
     double costoMantencion = double.parse(controllerMantencion.text);
+    double diasTrabajados = double.parse(controllerDias.text);
 
+    //formula cantidad optima
     double cantidadOptima = sqrt((2 * demanda * orden) / costoMantencion);
     String r = cantidadOptima.toStringAsFixed(0);
+
+    //formula numero esperado de ordenes
     double numOrdenes = demanda / cantidadOptima;
     String ordenes = numOrdenes.toStringAsFixed(0);
 
+    //formula tiempo de reorden
+    double reOrden = diasTrabajados / numOrdenes;
+    String ord = reOrden.toStringAsFixed(0);
+
+    //formula punto de reorden
+    double puntoReorden = ((demanda / diasTrabajados) * reOrden);
+    String ptoReorden = puntoReorden.toStringAsFixed(0);
+
+    //formula costos
+    double totalCostoOrden = ((demanda / cantidadOptima) * orden);
+    String tcostoOrden = totalCostoOrden.toStringAsFixed(0);
+
+    double totalCostoMantener = ((cantidadOptima / 2) * costoMantencion);
+    String tcostoMantener = totalCostoMantener.toStringAsFixed(0);
+
+    double totalCostoTotal = (demanda * costoUnitario) +
+        ((demanda / cantidadOptima) * orden) +
+        ((cantidadOptima / 2) * costoMantencion);
+
+    String tcostoTotal = totalCostoTotal.toStringAsFixed(0);
+
     setState(() {
-      mostrarImc = 'La cantidad optima de pedido es de $r unidades';
-      mostrarNumOrdenes = 'El numero de ordenes esperado es de $ordenes ';
+      mostrarCantidadOptima = 'Cantidad optima de pedido: $r unidades';
+      mostrarNumOrdenes = 'Numero de ordenes: $ordenes ';
+      tiempoReorden = "Tiempo de reorden: $ord";
+      campoPuntoReorden = "Punto de reorden: $ptoReorden";
+
+      costoOrden = "Costo total orden:  $tcostoOrden";
+      //costoMantencion = "Costo total mantención: $tcostoMantener" as double;
+      costoTotal = "El costo total es de: $tcostoTotal";
     });
   }
 
   void limpiaCampos() {
-    double demanda = double.parse(controllerDemanda.text);
-    double orden = double.parse(controllerOrden.text);
-    double costoUnitario = double.parse(controllerCostoUnitario.text);
-    double costoMantencion = double.parse(controllerMantencion.text);
     setState(() {
-      controllerCostoUnitario.clear();
-      controllerOrden.clear();
-      controllerDemanda.clear();
-      controllerMantencion.clear();
+      controllerCostoUnitario.text = "";
+      controllerOrden.text = "";
+      controllerDemanda.text = "";
+      controllerMantencion.text = "";
+      controllerDias.text = "";
     });
   }
 
@@ -139,6 +174,26 @@ class Calculadora extends State<MyCalculator> {
           ]),
         ),
         Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Dias trabajados: "),
+              Container(
+                width: 60,
+                height: 50,
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: controllerDias,
+                  validator: (value) {
+                    if (value!.isEmpty) return "Ingresa la cantidad de dias";
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +244,7 @@ class Calculadora extends State<MyCalculator> {
           ),
         ),
         Container(
-          height: 100,
+          height: 50,
           width: 30,
           decoration: const BoxDecoration(
             gradient:
@@ -198,7 +253,7 @@ class Calculadora extends State<MyCalculator> {
           //creamos el resultado del textformfield
           child: Center(
             child: Text(
-              mostrarImc,
+              mostrarCantidadOptima,
               style: const TextStyle(fontSize: 20.0),
               textAlign: TextAlign.center,
             ),
@@ -208,7 +263,7 @@ class Calculadora extends State<MyCalculator> {
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         ),
         Container(
-          height: 100,
+          height: 50,
           width: 30,
           decoration: const BoxDecoration(
             gradient:
@@ -218,6 +273,63 @@ class Calculadora extends State<MyCalculator> {
           child: Center(
             child: Text(
               mostrarNumOrdenes,
+              style: const TextStyle(fontSize: 20.0),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        ),
+        Container(
+          height: 50,
+          width: 30,
+          decoration: const BoxDecoration(
+            gradient:
+                LinearGradient(colors: [Color(0xFFFE2E64), Color(0xFFfF7818)]),
+          ),
+          //creamos el resultado del textformfield
+          child: Center(
+            child: Text(
+              tiempoReorden,
+              style: const TextStyle(fontSize: 20.0),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        ),
+        Container(
+          height: 50,
+          width: 30,
+          decoration: const BoxDecoration(
+            gradient:
+                LinearGradient(colors: [Color(0xFFFE2E64), Color(0xFFfF7818)]),
+          ),
+          //creamos el resultado del textformfield
+          child: Center(
+            child: Text(
+              costoOrden,
+              style: const TextStyle(fontSize: 20.0),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+        ),
+        Container(
+          height: 50,
+          width: 30,
+          decoration: const BoxDecoration(
+            gradient:
+                LinearGradient(colors: [Color(0xFFFE2E64), Color(0xFFfF7818)]),
+          ),
+          //creamos el resultado del textformfield
+          child: Center(
+            child: Text(
+              costoTotal,
               style: const TextStyle(fontSize: 20.0),
               textAlign: TextAlign.center,
             ),
